@@ -4,21 +4,32 @@ import os
 
 height = 6
 width = 8
+
 board = [[" "]*width for _ in range(height)]
 directions = {"w":(0, -1), "s":(0, 1), "a":(-1, 0), "d":(1, 0)}
 snake = [(1, 1), (1, 0)]
 food = [(random.choice([0, 2, 3, 4, 5]), random.choice([0, 2, 3, 4, 5])), (random.choice([0, 2, 3, 4, 5]), random.choice([0, 2, 3, 4, 5]))]
 ate = True
-length = 3
+length = len(snake)
+running = True
 
+for x, y in snake:
+    board[x][y] = "#"
+board[snake[0][0]][snake[0][1]] = "O"
+    
 def spawnFood() -> tuple:
     global board
+    global running
     empty = []
     for row in range(height):
         for column in range(width):
             if board[row][column]==" ":
                 empty.append((column, row))
-    nextFood = random.choice(empty)
+    if len(empty) == 0:
+        running = False
+        return
+    else:
+        nextFood = random.choice(empty)
     return nextFood
 
 
@@ -28,24 +39,24 @@ def render() -> None:
     global board
     global ate
     global length
-    
-    board = [[" "]*width for _ in range(height)]
-    for row in range(height):
-        for column in range(width):
-            if (column, row) in food:
-                board[row][column] = "*"
-            for part in snake:
-                if (column, row) == part:
-                    board[row][column] = "#"
-                elif (column, row) == snake[0]:
-                    board[row][column] = "O"
+    for x in range(width):
+        for y in range(height):
+            if (x, y) not in snake and (x, y) not in food:
+                board[y][x] = " "
+    for x, y in food:
+        board[y][x] = "*"
+    for x, y in snake:
+        board[y][x] = "#"
+    board[snake[0][1]][snake[0][0]] = "O"
+ 
     if next in food:
         ate = True
         newFood = spawnFood()
         food.append(newFood)
         food.remove(next)
         length += 1
-        
+    else:
+        board[snake[-1][1]][snake[-1][0]] = " "
     os.system('cls' if os.name == 'nt' else 'clear')
     
     print(f"+{'-'*(2*width+1)}+", end="")
@@ -58,7 +69,7 @@ def render() -> None:
     print(f"Length: {length}")
 
 dir = "s"
-while dir!="q":
+while running:
 
     next = (snake[0][0]+directions[dir][0], snake[0][1]+directions[dir][1])
     if next[0] not in range(0, width) or next[1] not in range(0, height) or next in snake[:-1]:
@@ -79,3 +90,5 @@ while dir!="q":
         print("END!")
         break
     dir = msvcrt.getch().decode("utf-8")
+    if dir == "q":
+        running = False
