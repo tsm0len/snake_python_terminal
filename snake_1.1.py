@@ -1,5 +1,6 @@
 import random
-import msvcrt
+#import msvcrt
+import getch
 import os
 
 height = 6
@@ -8,7 +9,7 @@ width = 8
 board = [[" "]*width for _ in range(height)]
 directions = {"w":(0, -1), "s":(0, 1), "a":(-1, 0), "d":(1, 0)}
 snake = [(1, 1), (1, 0)]
-food = [(random.choice([0, 2, 3, 4, 5]), random.choice([0, 2, 3, 4, 5])), (random.choice([0, 2, 3, 4, 5]), random.choice([0, 2, 3, 4, 5]))]
+food = [(random.choice([0, 2, 3, 4, 5]), random.choice([0, 2, 3, 4, 5]))]#, (random.choice([0, 2, 3, 4, 5]), random.choice([0, 2, 3, 4, 5]))]
 ate = True
 length = len(snake)
 running = True
@@ -89,6 +90,6 @@ while running:
     if length == area:
         print("END!")
         break
-    dir = msvcrt.getch().decode("utf-8")
+    dir = getch.getch().decode("utf-8")
     if dir == "q":
         running = False
