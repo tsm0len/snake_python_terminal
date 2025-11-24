@@ -1,6 +1,5 @@
 import random
-#import msvcrt
-import getch
+import msvcrt
 import os
 
 height = 6
@@ -90,6 +89,7 @@ while running:
     if length == area:
         print("END!")
         break
-    dir = getch.getch().decode("utf-8")
+    dir = msvcrt.getch().decode("utf-8")
     if dir == "q":
         running = False
+
